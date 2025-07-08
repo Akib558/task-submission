@@ -1,4 +1,7 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
+using Quartz;
+using Quartz.Impl;
 
 public class Emailer
 {
@@ -57,9 +60,9 @@ public class EmailService
     }
 
 
-    public async Task<List<EmailResponse>> SendEmails(List<Customer> customers)
+    public async Task<List<EmailResponse>> SendEmails(List<Customer> customers, int worker)
     {
-        int maxConcurrent = 10;
+        int maxConcurrent = worker;
         var semaphore = new SemaphoreSlim(maxConcurrent);
         var tasks = new List<Task>();
         var emails = new ConcurrentBag<EmailResponse>();
@@ -103,23 +106,61 @@ public class User
     }
 }
 
+public class SendMontlyInvoiceEmail : IJob
+{
+    public async Task Execute(IJobExecutionContext context)
+    {
+        var user = new User();
+        var customers = user.GetTodayUsers();
+        var emailService = new EmailService();
+        var worker = (int)(customers.Count * 0.1);
+        int success = 0;
+        int failed = 0;
+        var emails = await emailService.SendEmails(customers, worker);
+        
+        emails.ForEach(async x =>
+        {
+            if (x.Success)
+            {
+                success++;
+            }
+            else
+            {
+                failed++;
+            }
+        });
+        
+        Console.WriteLine($"Total emails sent: {success + failed}");
+        Console.WriteLine($"Emails sent successfully: {success}");
+        Console.WriteLine($"Emails failed: {failed}");
+        // return Task.CompletedTask;
 
-
-
-
+    }
+    
+}
 
 public class Program
 {
+   
     public static async Task Main(string[] args)
     {
-        var  user = new User();
-        var customers = user.GetTodayUsers();
-        var emailService = new EmailService();
-        var emails = await emailService.SendEmails(customers);
-        foreach(var email in emails)
-        {
-            Console.WriteLine(email.Body);
-        }
-        Console.WriteLine("Done");
+        
+        IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
+        await scheduler.Start();
+
+        IJobDetail job = JobBuilder.Create<SendMontlyInvoiceEmail>().Build();
+        
+        ITrigger trigger = TriggerBuilder.Create()
+            .WithIdentity("myTrigger", "group1")
+            .WithCronSchedule("* * 0 1 * ?") // every month 1st day at 12 am
+            .Build();
+        
+        await scheduler.ScheduleJob(job, trigger);
+        
+        Console.WriteLine("Press any key to close the app...");
+        Console.ReadKey();
+
+        await scheduler.Shutdown();
+
     }
 }
