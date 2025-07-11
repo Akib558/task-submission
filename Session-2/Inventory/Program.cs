@@ -114,7 +114,7 @@ public class DbLevelOrderService
 
 public class InventoryService
 {
-    private readonly Mutex _mutex = new Mutex() // server level lock
+    private readonly Mutex _mutex = new Mutex(); // server level lock
     SemaphoreSlim semaphore = new SemaphoreSlim(1, 1000);
 
     public OrderResponse PlaceOrder(OrderRequest orderRequest)
