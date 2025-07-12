@@ -7,11 +7,20 @@ public class Document
     public string Content { get; set; }
     public int AuthorId { get; set; }
 }
+
+public record DocumentSnapshot(
+    int Id, 
+    string Name, 
+    string Content, 
+    int AuthorId
+    );
+
 public class Users
 {
     public int Id { get; set; }
     public string Name { get; set; }
 }
+
 public class UserDocument
 {
     public int Id { get; set; }
@@ -19,6 +28,7 @@ public class UserDocument
     public Document Document { get; set; }
     public SaverService DocumentSaver { get; set; }
 }
+
 public static class DocumentProvider
 {
     public static List<Document> Documents { get; set; } = new();
@@ -26,21 +36,14 @@ public static class DocumentProvider
 
 public class DocumentQueueManager
 {
-    public readonly ConcurrentQueue<Document> _queue = new();
+    public readonly ConcurrentQueue<DocumentSnapshot> _queue = new();
 
-    public void Enqueue(Document document)
+    public void Enqueue(DocumentSnapshot document)
     {
-        var snapshot = new Document
-        {
-            Id = document.Id,
-            Name = document.Name,
-            Content = document.Content,
-            AuthorId = document.AuthorId
-        };
-        _queue.Enqueue(snapshot);
+        _queue.Enqueue(document);
     }
     
-    public bool TryDequeue(out Document snapshot)
+    public bool TryDequeue(out DocumentSnapshot snapshot)
     {
         return _queue.TryDequeue(out snapshot);
     }
@@ -50,7 +53,7 @@ public class DocumentRepository
 {
     public readonly object _lock = new();
 
-    public bool SaveToDb(Document document)
+    public bool SaveToDb(DocumentSnapshot document)
     {
         lock (_lock)
         {
@@ -107,10 +110,10 @@ public class DocumentWorker
 public class SaverService
 {
     private DocumentQueueManager _documentQueueManager;
-    private Document _document;
+    private DocumentSnapshot _document;
     private readonly int _interval;
 
-    public SaverService(DocumentQueueManager documentQueueManager, Document document, int interval = 1000)
+    public SaverService(DocumentQueueManager documentQueueManager, DocumentSnapshot document, int interval = 1000)
     {
         _documentQueueManager = documentQueueManager;
         _document = document;
@@ -122,8 +125,8 @@ public class SaverService
         while (true)
         {
             Thread.Sleep(_interval);
-            _document.Content = $"[AutoSave] {DateTime.Now:HH:mm:ss.fff}";
-            _documentQueueManager.Enqueue(_document);
+            var snapshot = _document with { Content = $"[AutoSave]    {DateTime.Now:HH:mm:ss.fff}" };
+            _documentQueueManager.Enqueue(snapshot);
         }
     }
 
@@ -132,8 +135,8 @@ public class SaverService
         while (true)
         {
             Thread.Sleep(1000);
-            _document.Content = $"[ManualSave] {DateTime.Now:HH:mm:ss.fff}";
-            _documentQueueManager.Enqueue(_document);
+            var snapshot = _document with { Content = $"[ManualSave]  {DateTime.Now:HH:mm:ss.fff}" };
+            _documentQueueManager.Enqueue(snapshot);
         }
     }
 
@@ -160,8 +163,8 @@ public class Test
             users.Add(new Users { Id = i, Name = $"User{i}" });
             var document = new Document { Id = i };
             DocumentProvider.Documents.Add(document);
-
-            var saver = new SaverService(queueManager, document);
+            var documentSnapshot = new DocumentSnapshot(i, $"", $"", i);
+            var saver = new SaverService(queueManager, documentSnapshot);
             Task.Run(saver.AutoSave);
             Task.Run(saver.ManualSave);
         }
