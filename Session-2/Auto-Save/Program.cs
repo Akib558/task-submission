@@ -21,14 +21,6 @@ public class Users
     public string Name { get; set; }
 }
 
-public class UserDocument
-{
-    public int Id { get; set; }
-    public Users User { get; set; }
-    public Document Document { get; set; }
-    public SaverService DocumentSaver { get; set; }
-}
-
 public static class DocumentProvider
 {
     public static List<Document> Documents { get; set; } = new();
