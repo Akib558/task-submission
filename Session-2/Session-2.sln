@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User-Profile-Photo-Batch-Up
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Concurrent-Subtitile-Downloader", "Concurrent-Subtitile-Downloader\Concurrent-Subtitile-Downloader.csproj", "{C5B35067-A0D7-4AD3-ADFF-934603201A89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Live-Matrics-Dashboard", "Live-Matrics-Dashboard\Live-Matrics-Dashboard.csproj", "{A74117A3-F8A2-445C-BD49-866907603520}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{C5B35067-A0D7-4AD3-ADFF-934603201A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5B35067-A0D7-4AD3-ADFF-934603201A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5B35067-A0D7-4AD3-ADFF-934603201A89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A74117A3-F8A2-445C-BD49-866907603520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A74117A3-F8A2-445C-BD49-866907603520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A74117A3-F8A2-445C-BD49-866907603520}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A74117A3-F8A2-445C-BD49-866907603520}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

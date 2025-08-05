@@ -1,0 +1,6 @@
+@Live_Matrics_Dashboard_HostAddress = http://localhost:5185
+
+GET {{Live_Matrics_Dashboard_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
