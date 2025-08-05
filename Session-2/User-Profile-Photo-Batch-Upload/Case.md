@@ -10,3 +10,4 @@
   - compressed
   - renamed
   - stored
+- Handle Cancellation Upload midway gracefully

@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auto-Save", "Auto-Save\Auto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User-Profile-Photo-Batch-Upload", "User-Profile-Photo-Batch-Upload\User-Profile-Photo-Batch-Upload.csproj", "{B0E4DAE9-D6E1-4B23-8797-41D86D203B34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Concurrent-Subtitile-Downloader", "Concurrent-Subtitile-Downloader\Concurrent-Subtitile-Downloader.csproj", "{C5B35067-A0D7-4AD3-ADFF-934603201A89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{B0E4DAE9-D6E1-4B23-8797-41D86D203B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0E4DAE9-D6E1-4B23-8797-41D86D203B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0E4DAE9-D6E1-4B23-8797-41D86D203B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5B35067-A0D7-4AD3-ADFF-934603201A89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5B35067-A0D7-4AD3-ADFF-934603201A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5B35067-A0D7-4AD3-ADFF-934603201A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5B35067-A0D7-4AD3-ADFF-934603201A89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

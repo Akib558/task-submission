@@ -54,7 +54,7 @@ public class TestRunner
     }
 
     
-    public async Task RunTest(int userCount = 10000, string imageFolder = "photo-collections", int worker = 1000, int workerCapacity = 1000)
+    public async Task RunTest(int userCount = 10000, string imageFolder = "photo-collections", int worker = 1000, int workerCapacity = 1000, CancellationToken cancellationToken = default)
     {
         var sampleFolder = Path.Combine(Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.FullName, imageFolder);
         var usersUploadRequests = Generate(userCount: userCount, sampleImageFolder: sampleFolder);
@@ -74,7 +74,7 @@ public class TestRunner
             await semaphore.WaitAsync();
             try
             {
-                await _imageProcessor.ProcessUserImagesAsync(request, workerCapacity);
+                await _imageProcessor.ProcessUserImagesAsync(request, workerCapacity, cancellationToken);
             }
             catch (Exception e)
             {
@@ -95,33 +95,33 @@ public class TestRunner
 
 public interface IImageService
 {
-    Task<bool> UploadImageAsync(int userId, UploadedPhoto photo);
-    Task<bool> RenameImageAsync(int userId, UploadedPhoto photo);
-    Task<bool> ProcessImageAsync(int userId, UploadedPhoto photo);
+    Task<bool> UploadImageAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default);
+    Task<bool> RenameImageAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default);
+    Task<bool> ProcessImageAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default);
 }
 
 
 public interface IFileService
 {
-    Task<bool> UploadFileAsync(int userId, UploadedPhoto photo);
-    Task<bool> CompressFileAsync(int userId, UploadedPhoto photo);
-    Task<bool> RenameFileAsync(int userId, UploadedPhoto photo);
+    Task<bool> UploadFileAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default);
+    Task<bool> CompressFileAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default);
+    Task<bool> RenameFileAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default);
 }
 
 public interface IImageProcessor
 {
-    Task ProcessUserImagesAsync(UserUploadRequest request, int maxDegreeOfParallelism);
+    Task ProcessUserImagesAsync(UserUploadRequest request, int maxDegreeOfParallelism, CancellationToken cancellationToken = default);
 }
 
 
 public class FileService : IFileService
 {
-    public async Task<bool> UploadFileAsync(int userId, UploadedPhoto photo)
+    public async Task<bool> UploadFileAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default)
     {
         try
         {
             Console.WriteLine($"[User {userId}] Starting upload of {photo.FileName} on thread {Environment.CurrentManagedThreadId}");
-            await Task.Delay(Random.Shared.Next(200, 1000));
+            await Task.Delay(Random.Shared.Next(200, 1000), cancellationToken);;
             Console.WriteLine($"[User {userId}] Finished upload of {photo.FileName}");
             return true;
         }
@@ -132,12 +132,12 @@ public class FileService : IFileService
         }
     }
     
-    public async Task<bool> CompressFileAsync(int userId, UploadedPhoto photo)
+    public async Task<bool> CompressFileAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default)
     {
         try
         {
             Console.WriteLine($"[User {userId}] Starting processing of {photo.FileName} on thread {Environment.CurrentManagedThreadId}");
-            await Task.Delay(Random.Shared.Next(200, 1000));
+            await Task.Delay(Random.Shared.Next(200, 1000), cancellationToken);
             Console.WriteLine($"[User {userId}] Finished processing {photo.FileName}");
             return true;
         }
@@ -148,13 +148,13 @@ public class FileService : IFileService
         }
     }
     
-    public async Task<bool> RenameFileAsync(int userId, UploadedPhoto photo)
+    public async Task<bool> RenameFileAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default)
     {
         try
         {
             Console.WriteLine(
                 $"[User {userId}] Starting rename of {photo.FileName} on thread {Environment.CurrentManagedThreadId}");
-            await Task.Delay(Random.Shared.Next(200, 1000));
+            await Task.Delay(Random.Shared.Next(200, 1000), cancellationToken);
             Console.WriteLine($"[User {userId}] Finished rename of {photo.FileName}");
             return true;
         }
@@ -175,21 +175,21 @@ public class ImageService : IImageService
         _fileService = fileService;
     }
     
-    public async Task<bool> UploadImageAsync(int userId, UploadedPhoto photo)
+    public async Task<bool> UploadImageAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default)
     {
-        await _fileService.UploadFileAsync(userId, photo);
+        await _fileService.UploadFileAsync(userId, photo, cancellationToken);
         return true;
     }
 
-    public async Task<bool> RenameImageAsync(int userId, UploadedPhoto photo)
+    public async Task<bool> RenameImageAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default)
     {
-        await _fileService.RenameFileAsync(userId, photo);
+        await _fileService.RenameFileAsync(userId, photo, cancellationToken);
         return true;
     }
 
-    public async Task<bool> ProcessImageAsync(int userId, UploadedPhoto photo)
+    public async Task<bool> ProcessImageAsync(int userId, UploadedPhoto photo, CancellationToken cancellationToken = default)
     {
-        await _fileService.CompressFileAsync(userId, photo);
+        await _fileService.CompressFileAsync(userId, photo, cancellationToken);
         return true;
     }
 }
@@ -204,7 +204,7 @@ public class ImageProcessor : IImageProcessor
         _imageService = imageService;
     }
 
-    public async Task ProcessUserImagesAsync(UserUploadRequest request, int maxDegreeOfParallelism)
+    public async Task ProcessUserImagesAsync(UserUploadRequest request, int maxDegreeOfParallelism, CancellationToken cancellationToken = default)
     {
         using var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
 
@@ -212,15 +212,15 @@ public class ImageProcessor : IImageProcessor
         {
             await semaphore.WaitAsync();
             
-            var success = await _imageService.RenameImageAsync(request.UserId, photo);
+            var success = await _imageService.RenameImageAsync(request.UserId, photo, cancellationToken);
 
             if (success)
             {
-                success = await _imageService.ProcessImageAsync(request.UserId, photo);
+                success = await _imageService.ProcessImageAsync(request.UserId, photo, cancellationToken);
             }
             if (success)
             {
-                success = await _imageService.UploadImageAsync(request.UserId, photo);
+                success = await _imageService.UploadImageAsync(request.UserId, photo, cancellationToken);
             }
             
             semaphore.Release();
@@ -235,13 +235,33 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+        using var cts = new CancellationTokenSource();
+
+        // Start a background task to cancel after 3 seconds
+        _ = Task.Run(() =>
+        {
+            Thread.Sleep(3000);
+            cts.Cancel();
+            Console.WriteLine("Cancellation requested! -----------------------------------------------------------------------------");
+        });
+
         var testRunner = new TestRunner(new ImageProcessor(new ImageService(new FileService())));
-        
-        await testRunner.RunTest(
+
+        try
+        {
+            await testRunner.RunTest(
                 userCount: 20,
                 imageFolder: "photo-collections",
                 worker: 5,
-                workerCapacity: 3
+                workerCapacity: 3,
+                cancellationToken: cts.Token
             );
+        }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("The operation was cancelled.");
+        }
+        
     }
+
 }
