@@ -1,0 +1,105 @@
+##############################################
+# .NET & C# build artifacts
+##############################################
+
+# Ignore bin and obj folders recursively (case insensitive)
+[Bb]in/
+[Oo]bj/
+
+# Build artifacts
+artifacts/
+
+# Logs
+*.log
+[Ll]og/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Dotnet CLI
+*.deps.json
+*.runtimeconfig.json
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.testresults
+
+# Entity Framework Migrations (optional)
+Migrations/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Configuration transforms
+*.transform
+*.config.user
+
+# IIS Express settings
+.vs/
+
+##############################################
+# JetBrains Rider
+##############################################
+
+.idea/
+*.sln.iml
+
+##############################################
+# ReSharper (Rider includes it)
+##############################################
+
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+##############################################
+# Visual Studio Code (if you also use VSCode)
+##############################################
+
+.vscode/
+
+##############################################
+# OS & Misc
+##############################################
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+##############################################
+# Node / Frontend (if using client-side stuff)
+##############################################
+
+node_modules/
+bower_components/
+wwwroot/lib/
+
+##############################################
+# NuGet Packages
+##############################################
+
+*.nupkg
+*.snupkg
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+
+##############################################
+# Others (optional)
+##############################################
+
+# Rider-specific caches (optional, safe)
+.idea/.idea.IC/
+
+# Rider log folders (if you use any custom log folders)
+*.tlog
+*.svclog
+
+
