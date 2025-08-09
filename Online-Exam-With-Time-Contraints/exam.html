@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Student Exam</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+</head>
+<body>
+<h2>Exam Page</h2>
+<div id="status">Connecting...</div>
+<button id="startBtn" disabled onclick="startExam()">Start Exam</button>
+<div id="questions"></div>
+
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5096/examHub")
+        .build();
+
+    connection.on("PreparationComplete", (msg) => {
+        document.getElementById("status").innerText = msg;
+        document.getElementById("startBtn").disabled = false;
+    });
+
+    connection.on("ReceiveQuestions", (questions) => {
+        let qDiv = document.getElementById("questions");
+        qDiv.innerHTML = "<h3>Your Questions:</h3><ul>" +
+            questions.map(q => `<li>${q}</li>`).join("") +
+            "</ul>";
+    });
+
+    async function startExam() {
+        await connection.invoke("StartExam");
+    }
+
+    async function connect() {
+        await connection.start();
+        document.getElementById("status").innerText = "Connected. Preparing your questions...";
+    }
+
+    connect();
+</script>
+</body>
+</html>

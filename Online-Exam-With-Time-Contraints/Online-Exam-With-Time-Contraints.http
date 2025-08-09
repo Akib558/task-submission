@@ -1,0 +1,6 @@
+@Online_Exam_With_Time_Contraints_HostAddress = http://localhost:5096
+
+GET {{Online_Exam_With_Time_Contraints_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

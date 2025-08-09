@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Metrics Dashboard</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 1rem;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Live Metrics Dashboard</h1>
+<p>Last Updated: <span id="timestamp"></span></p>
+
+<table>
+    <caption>Microservice Metrics</caption>
+    <thead>
+    <tr>
+        <th>Service ID</th>
+        <th>Uptime</th>
+        <th>Error Count</th>
+        <th>Success Count</th>
+        <th>Request Delay</th>
+    </tr>
+    </thead>
+    <tbody id="metrics-body">
+    <!-- Rows will be inserted here -->
+    </tbody>
+</table>
+
+<script>
+    async function fetchMetrics() {
+        try {
+            const response = await fetch("http://localhost:5185/api/metrics");
+            const services = await response.json();
+
+            const tbody = document.getElementById("metrics-body");
+            tbody.innerHTML = ""; // Clear old data
+            console.log(services);
+
+            services.forEach(service => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${service.serviceId}</td>
+                    <td>${service.uptime}</td>
+                    <td>${service.errorCount}</td>
+                    <td>${service.successCount}</td>
+                    <td>${service.duration}ms</td>
+                `;
+
+                tbody.appendChild(row);
+            });
+
+            document.getElementById("timestamp").textContent = new Date().toLocaleTimeString();
+        } catch (e) {
+            console.error("Failed to fetch metrics", e);
+        }
+    }
+
+    setInterval(fetchMetrics, 2000);
+    fetchMetrics();
+</script>
+
+</body>
+</html>
