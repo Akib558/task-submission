@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Live-Matrics-Dashboard", "L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Video-Uploader-And-Conversion", "Video-Uploader-And-Conversion\Video-Uploader-And-Conversion.csproj", "{AA0F458F-653E-4106-BBBD-18F17EA6CA2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multi-User-Chat", "Multi-User-Chat\Multi-User-Chat.csproj", "{FFD8F8DE-A805-42A8-932A-9CD2160FB836}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{AA0F458F-653E-4106-BBBD-18F17EA6CA2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA0F458F-653E-4106-BBBD-18F17EA6CA2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA0F458F-653E-4106-BBBD-18F17EA6CA2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFD8F8DE-A805-42A8-932A-9CD2160FB836}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFD8F8DE-A805-42A8-932A-9CD2160FB836}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFD8F8DE-A805-42A8-932A-9CD2160FB836}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFD8F8DE-A805-42A8-932A-9CD2160FB836}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

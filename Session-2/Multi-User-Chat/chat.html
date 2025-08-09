@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Standalone Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+</head>
+<body>
+<h2>Chat Room</h2>
+<label>Your Name: <input id="username"></label><br>
+<label>Room: <input id="room"></label>
+<button onclick="joinRoom()">Join Room</button>
+
+<div id="chat" style="margin-top:20px; border:1px solid black; height:200px; overflow:auto;"></div>
+
+<input id="message" placeholder="Type message..." onkeypress="if(event.key==='Enter') sendMessage()">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    let connection;
+
+    async function joinRoom() {
+        let room = document.getElementById("room").value;
+        connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:5125/chathub")
+            .build();
+
+        connection.on("ReceiveMessage", (user, message) => {
+            let chat = document.getElementById("chat");
+            chat.innerHTML += `<div><b>${user}:</b> ${message}</div>`;
+            chat.scrollTop = chat.scrollHeight;
+        });
+
+        await connection.start();
+        await connection.invoke("JoinRoom", room);
+    }
+
+    async function sendMessage() {
+        let user = document.getElementById("username").value;
+        let room = document.getElementById("room").value;
+        let msg = document.getElementById("message").value;
+        await connection.invoke("SendMessage", room, user, msg);
+        document.getElementById("message").value = "";
+    }
+</script>
+</body>
+</html>

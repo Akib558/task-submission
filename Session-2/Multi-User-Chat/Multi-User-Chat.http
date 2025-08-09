@@ -1,0 +1,6 @@
+@Multi_User_Chat_HostAddress = http://localhost:5125
+
+GET {{Multi_User_Chat_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
