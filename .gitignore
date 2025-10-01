@@ -1,0 +1,102 @@
+##############################################
+# .NET & C# build artifacts
+##############################################
+
+# Ignore bin and obj everywhere (recursively, case-insensitive)
+**/[Bb]in/
+**/[Oo]bj/
+
+# Build artifacts
+artifacts/
+
+# Logs
+*.log
+[Ll]og/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Dotnet CLI
+*.deps.json
+*.runtimeconfig.json
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.testresults
+
+# Entity Framework Migrations (optional)
+Migrations/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Configuration transforms
+*.transform
+*.config.user
+
+# IIS Express settings
+.vs/
+
+##############################################
+# JetBrains Rider
+##############################################
+
+.idea/
+*.sln.iml
+
+##############################################
+# ReSharper
+##############################################
+
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+##############################################
+# Visual Studio Code
+##############################################
+
+.vscode/
+
+##############################################
+# OS & Misc
+##############################################
+
+.DS_Store
+Thumbs.db
+
+##############################################
+# Node / Frontend
+##############################################
+
+node_modules/
+bower_components/
+wwwroot/lib/
+
+##############################################
+# NuGet Packages
+##############################################
+
+*.nupkg
+*.snupkg
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+
+##############################################
+# Restrict to C# source files
+##############################################
+
+
+
+# Allow only C# files
+!*.cs
+
+# (Optional) Allow solution files too
+*.sln
+*.csproj
